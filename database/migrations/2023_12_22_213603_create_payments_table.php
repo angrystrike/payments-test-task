@@ -16,11 +16,11 @@ class CreatePaymentsTable extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('currency_id');
             $table->string('transaction_id');
             $table->unsignedBigInteger('order_id');
             $table->decimal('amount', 10, 2)->nullable();
-            $table->enum('currency', ['usd', 'eur', 'uah'])->default('usd');
             $table->enum('status', ['completed', 'pending', 'refunded', 'failed'])->nullable();
             $table->timestamp('order_created_at')->nullable();
             $table->timestamp('order_completed_at')->nullable();
@@ -31,6 +31,7 @@ class CreatePaymentsTable extends Migration
             $table->boolean('send_push')->nullable();
             $table->integer('processing_time')->nullable();
             
+            $table->foreign('currency_id')->references('id')->on('currencies');
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
