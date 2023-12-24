@@ -10,6 +10,7 @@ class Payment extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'transaction_id',
         'order_id',
         'amount',
@@ -24,4 +25,9 @@ class Payment extends Model
         'send_push',
         'processing_time',
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }

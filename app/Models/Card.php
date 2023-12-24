@@ -17,6 +17,7 @@ class Card extends Model
         'payment_group',
         'country',
         'currency',
+        'balance'
     ];
 
     public function user(): BelongsTo
