@@ -11,7 +11,12 @@ class PromoCode extends Model
 
     protected $fillable = [
         'code',
-        'currency',
+        'currency_id',
         'bonus_amount',
     ];
+
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class);
+    }
 }

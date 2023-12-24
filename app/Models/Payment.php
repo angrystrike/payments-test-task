@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
 class Payment extends Model
 {
     use HasFactory;
@@ -12,9 +13,9 @@ class Payment extends Model
     protected $fillable = [
         'user_id',
         'transaction_id',
+        'currency_id',
         'order_id',
         'amount',
-        'currency',
         'status',
         'order_created_at',
         'order_completed_at',
@@ -29,5 +30,10 @@ class Payment extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class);
     }
 }

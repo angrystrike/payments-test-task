@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
 class Card extends Model
 {
     use HasFactory;
@@ -16,12 +17,17 @@ class Card extends Model
         'payment_system',
         'payment_group',
         'country',
-        'currency',
+        'currency_id',
         'balance'
     ];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function currency(): BelongsTo
+    {
+        return $this->belongsTo(Currency::class);
     }
 }
