@@ -16,6 +16,7 @@ class CreatePaymentsTable extends Migration
         Schema::create('payments', function (Blueprint $table) {
             $table->id();
 
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->string('transaction_id');
             $table->unsignedBigInteger('order_id');
             $table->decimal('amount', 10, 2)->nullable();
@@ -29,7 +30,8 @@ class CreatePaymentsTable extends Migration
             $table->boolean('is_cash')->nullable();
             $table->boolean('send_push')->nullable();
             $table->integer('processing_time')->nullable();
-
+            
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }
