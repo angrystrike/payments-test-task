@@ -7,7 +7,7 @@ use App\Models\Currency;
 use Illuminate\Support\Facades\DB;
 
 
-class PromoCodesTableSeeder extends Seeder
+class PromoCodeSeeder extends Seeder
 {
     /**
      * Run the database seeds.

@@ -6,7 +6,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 
-class CurrenciesTableSeeder extends Seeder
+class CurrencySeeder extends Seeder
 {
     /**
      * Run the database seeds.
