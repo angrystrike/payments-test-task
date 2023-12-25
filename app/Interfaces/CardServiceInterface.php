@@ -7,5 +7,5 @@ use App\Models\Payment;
 
 interface CardServiceInterface
 {
-    public function store($data, $email, $amount);
+    public function store($data, $email, $promoData);
 }

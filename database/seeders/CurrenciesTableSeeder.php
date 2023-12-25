@@ -18,16 +18,19 @@ class CurrenciesTableSeeder extends Seeder
         $currencies = [
             [
                 'title' => 'USD',
+                'rateToUsd' => 1.0,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'title' => 'UAH',
+                'rateToUsd' => 32.0,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'title' => 'EUR',
+                'rateToUsd' => 0.9,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],

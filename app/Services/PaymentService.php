@@ -11,6 +11,11 @@ use App\Models\User;
 use App\Models\Currency;
 
 
+/**
+ * Class PaymentService
+ *
+ * A service class for handling payment-related operations.
+ */
 class PaymentService implements PaymentServiceInterface 
 {
     private $currencyAmount = [
@@ -20,6 +25,19 @@ class PaymentService implements PaymentServiceInterface
     private $mapData;
 
     public function __construct() {
+        /*
+         * Define mapping data for JSON to table column transformation.
+         * We can get same data, but with different keys. For example status can be named state or type in future.
+         * $this->mapData = [
+         *     'column_name_in_db' => [
+         *         'keys' => ['possible', 'keys', 'names', 'in', 'json'],
+         *         'values' => [
+         *             'enum_name_in_db' => ['possible', 'status', 'name', 'in', 'json']
+         *         ],
+         *         'entity' => 'entity_for_easier_mapping' 
+         *     ]
+         * ]
+         */
         $this->mapData = [
             'status' => [
                 'keys' => ['state', 'status'],
@@ -113,6 +131,13 @@ class PaymentService implements PaymentServiceInterface
         ];
     }
 
+    /**
+     * Maps JSON input data to corresponding table columns.
+     *
+     * @param array $input The input data in JSON format.
+     *
+     * @return array The mapped data.
+     */
     private function mapJsonToTableColumns($input)
     {
         $data = [];
@@ -144,6 +169,7 @@ class PaymentService implements PaymentServiceInterface
             }
         }
 
+        // If email is not present in JSON, find by order_id
         if (!isset($data['Payment']['email'])) {
             $order = Order::find($data['Payment']['order_id']);
             $data['Payment']['email'] = $order->user->email;

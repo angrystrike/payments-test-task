@@ -7,5 +7,5 @@ use App\Models\PromoCode;
 
 interface PromoCodeServiceInterface
 {
-    public function store($code, $email);
+    public function store($code, $email, $transactionStatus);
 }

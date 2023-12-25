@@ -12,15 +12,18 @@ use App\Interfaces\PromoCodeServiceInterface;
 
 class PromoCodeService implements PromoCodeServiceInterface 
 {
-    public function store($code, $email)
+    public function store($code, $email, $transactionStatus)
     {
+        if (!in_array($transactionStatus, ['completed'])) {
+            return null;
+        }
+
         $user = User::where('email', $email)->first();
         $promoCode = PromoCode::where('code', $code)->first();
         
-        $userPromoCode = null;
-        $bonus = 0;
+        $result = null;
         if (!$promoCode) {
-            return $bonus;
+            return $result;
         }
 
         $userPromoCode = UserPromoCode::where([
@@ -33,9 +36,12 @@ class PromoCodeService implements PromoCodeServiceInterface
                 'user_id' => $user->id,
                 'promo_code_id' => $promoCode->id
             ]);
-            $bonus = $promoCode->bonus_amount;
+            $result = [
+                'bonus' => $promoCode->bonus_amount,
+                'currency' => $promoCode->currency->title
+            ];
         }
 
-        return $bonus;
+        return $result;
     }
 }
