@@ -40,6 +40,8 @@ class PaymentController extends Controller
         $bonus = $this->promoCodeService->store($promoCode, $email);
         $this->cardService->store($transactionData, $email, $bonus);
 
-        return response()->json(123);
+        return response()->json([
+            'message' => 'Transaction data saved!'
+        ]);
     }
 }
