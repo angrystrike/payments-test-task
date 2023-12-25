@@ -9,8 +9,8 @@ use App\Models\User;
 use App\Models\Card;
 use App\Models\PromoCode;
 use App\Models\UserPromoCode;
-use App\Services\PaymentService;
 use App\Helpers\CurrencyConverter;
+use App\Services\PaymentService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use App\Interfaces\PaymentServiceInterface;
@@ -24,12 +24,14 @@ class PaymentController extends Controller
     private $paymentService;
     private $promoCodeService;
     private $cardService;
+    private $currencyConverter;
 
     public function __construct()
     {
         $this->paymentService = App::make(PaymentServiceInterface::class);
         $this->promoCodeService = App::make(PromoCodeServiceInterface::class);
         $this->cardService = App::make(CardServiceInterface::class);
+        $this->currencyConverter = new CurrencyConverter();
     }
 
     public function store(Request $request, $promoCode = null)
@@ -37,8 +39,8 @@ class PaymentController extends Controller
         $transactionData = $this->paymentService->store($request->all());
         $email = $transactionData['Payment']['email'];
 
-        $bonus = $this->promoCodeService->store($promoCode, $email);
-        $this->cardService->store($transactionData, $email, $bonus);
+        $promoData = $this->promoCodeService->store($promoCode, $email, $data['Payment']['status']);
+        $this->cardService->store($transactionData, $email, $promoData);
 
         return response()->json([
             'message' => 'Transaction data saved!'
