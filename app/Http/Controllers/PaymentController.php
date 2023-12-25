@@ -36,14 +36,23 @@ class PaymentController extends Controller
 
     public function store(Request $request, $promoCode = null)
     {
-        $transactionData = $this->paymentService->store($request->all());
-        $email = $transactionData['Payment']['email'];
+        try {
+            $transactionData = $this->paymentService->store($request->all());
+            $email = $transactionData['Payment']['email'];
 
-        $promoData = $this->promoCodeService->store($promoCode, $email, $data['Payment']['status']);
-        $this->cardService->store($transactionData, $email, $promoData);
+            $promoData = $this->promoCodeService->store($promoCode, $email, $transactionData['Payment']['status']);
+            $this->cardService->store($transactionData, $email, $promoData);
 
-        return response()->json([
-            'message' => 'Transaction data saved!'
-        ]);
+            return response()->json([
+                'message' => 'Transaction data saved!',
+                'statusCode' => 200
+            ]);
+        }
+        catch (\InvalidArgumentException $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+                'statusCode' => 400
+            ]);
+        }
     }
 }

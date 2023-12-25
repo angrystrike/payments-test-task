@@ -144,7 +144,9 @@ class PaymentService implements PaymentServiceInterface
         foreach ($this->mapData as $field => $fieldData) {
             foreach ($fieldData['keys'] as $fieldName) {
                 $fieldValue = isset($input[$fieldName]) ? $input[$fieldName] : null;
+
                 if (isset($fieldData['values']) && $fieldValue) {
+                    $data[$fieldData['entity']][$field] = null;
                     foreach ($fieldData['values'] as $key => $values) {
                         if (in_array($fieldValue, $values)) {
                             $status = $key;
@@ -181,9 +183,29 @@ class PaymentService implements PaymentServiceInterface
     public function store($data)
     {
         $transactionData = $this->mapJsonToTableColumns($data);
+
+        if (
+            !isset($transactionData['Payment']['transaction_id']) ||
+            !isset($transactionData['Payment']['order_id']) ||
+            !isset($transactionData['Payment']['amount']) ||
+            !isset($transactionData['Payment']['currency']) ||
+            !isset($transactionData['Payment']['status'])
+        ) {
+            throw new \InvalidArgumentException(
+                'transaction_id, order_id, amount, currency, status fields are required'
+            );
+        }
+
         $user = User::where('email', $transactionData['Payment']['email'])->first();
+        if (!$user) {
+            throw new \InvalidArgumentException('Could not find user.');
+        }
 
         $currency = Currency::where('title', $transactionData['Payment']['currency'])->first();
+        if (!$currency) {
+            throw new \InvalidArgumentException('This currency is unsupported.');
+        }
+
         $transactionData['Payment']['user_id'] = $user->id;
         $transactionData['Payment']['currency_id'] = $currency->id;
         Payment::create($transactionData['Payment']);
